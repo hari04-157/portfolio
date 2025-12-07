@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Harish | Developer Portfolio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #111827; /* Dark Blue-Gray */
+        }
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #111827; }
+        ::-webkit-scrollbar-thumb { background: #38bdf8; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #0ea5e9; }
+        
+        /* Chatbot styles */
+        #chatbot-container { position: fixed; bottom: 1rem; right: 1rem; z-index: 1000; }
+        #chatbot-toggle {
+            background-color: #0ea5e9; color: white; width: 60px; height: 60px;
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            cursor: pointer; box-shadow: 0 4px 20px rgba(14, 165, 233, 0.4);
+            transition: transform 0.2s ease-in-out;
+        }
+        #chatbot-toggle:hover { transform: scale(1.1); }
+        #chatbot-window {
+            position: absolute; bottom: 80px; right: 0; width: 320px; max-width: 90vw; height: 500px;
+            transform-origin: bottom right; transition: transform 0.3s ease-in-out, opacity 0.3s;
+            transform: scale(0); opacity: 0;
+        }
+        #chatbot-window.open { transform: scale(1); opacity: 1; }
+        
+        .typing-indicator span {
+            height: 8px; width: 8px; background-color: #9ca3af; border-radius: 50%;
+            display: inline-block; animation: bounce 1.4s infinite ease-in-out both;
+        }
+        .typing-indicator span:nth-child(1) { animation-delay: -0.32s; }
+        .typing-indicator span:nth-child(2) { animation-delay: -0.16s; }
+        @keyframes bounce { 0%, 80%, 100% { transform: scale(0); } 40% { transform: scale(1.0); } }
+
+        /* Chatbot Tooltip Animation */
+        #chatbot-tooltip {
+            bottom: 75px; right: 0; z-index: 999;
+            animation: hideTooltipContainer 13s forwards; visibility: visible; pointer-events: none;
+        }
+        .tooltip-text-item {
+            position: absolute; bottom: 0; right: 0;
+            background-color: #374151; color: white; padding: 6px 12px;
+            border-radius: 8px; font-size: 13px; font-weight: 500;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); white-space: nowrap;
+            opacity: 0; transform: translateY(10px);
+            animation: fadeInOutUp 4s ease-in-out forwards;
+        }
+        @keyframes fadeInOutUp {
+            0% { opacity: 0; transform: translateY(10px); }
+            15% { opacity: 1; transform: translateY(0); }
+            85% { opacity: 1; transform: translateY(0); }
+            100% { opacity: 0; transform: translateY(-10px); }
+        }
+        .tooltip-text-item:nth-child(1) { animation-delay: 1s; }
+        .tooltip-text-item:nth-child(2) { animation-delay: 5s; }
+        .tooltip-text-item:nth-child(3) { animation-delay: 9s; }
+        @keyframes hideTooltipContainer { 0%, 99.9% { visibility: visible; } 100% { visibility: hidden; } }
+    </style>
+</head>
+<body class="text-gray-200">
+
+    <header id="header" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="#" class="text-2xl font-bold text-white">Harish<span class="text-sky-400">.</span></a>
+            <div class="hidden md:flex space-x-6 items-center">
+                <a href="#about" class="hover:text-sky-400 transition-colors">About</a>
+                <a href="#experience" class="hover:text-sky-400 transition-colors">Experience</a>
+                <a href="#skills" class="hover:text-sky-400 transition-colors">Skills</a>
+                <a href="#projects" class="hover:text-sky-400 transition-colors">Projects</a>
+                <a href="#articles" class="hover:text-sky-400 transition-colors">Articles</a>
+                <a href="#contact" class="bg-sky-500 hover:bg-sky-600 text-white font-semibold px-4 py-2 rounded-lg transition-colors">Contact Me</a>
+            </div>
+            <button id="mobile-menu-button" class="md:hidden text-white focus:outline-none">
+                <i data-lucide="menu" class="w-6 h-6"></i>
+            </button>
+        </nav>
+        <div id="mobile-menu" class="hidden md:hidden bg-gray-800 bg-opacity-95">
+            <a href="#about" class="mobile-menu-link block py-2 px-4 text-sm hover:bg-gray-700">About</a>
+            <a href="#experience" class="mobile-menu-link block py-2 px-4 text-sm hover:bg-gray-700">Experience</a>
+            <a href="#skills" class="mobile-menu-link block py-2 px-4 text-sm hover:bg-gray-700">Skills</a>
+            <a href="#projects" class="mobile-menu-link block py-2 px-4 text-sm hover:bg-gray-700">Projects</a>
+            <a href="#articles" class="mobile-menu-link block py-2 px-4 text-sm hover:bg-gray-700">Articles</a>
+            <a href="#contact" class="mobile-menu-link block py-2 px-4 text-sm hover:bg-gray-700">Contact Me</a>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-6 pt-20">
+        <section id="home" class="min-h-screen flex flex-col-reverse md:flex-row items-center justify-center gap-8">
+            <div class="md:w-1/2 text-center md:text-left">
+                <h1 class="text-4xl sm:text-5xl md:text-6xl font-bold text-white leading-tight">
+                    Hi, I'm Harish<br>
+                    I build things for the <span id="typed-text" class="text-sky-400"></span>
+                </h1>
+                <p class="mt-6 text-lg text-gray-400 max-w-xl mx-auto md:mx-0">
+                    A passionate developer from Singareddipalli, Nellore(District), Andhra Pradesh, India, with a knack for turning complex problems into elegant, user-friendly solutions. Currently exploring the MERN stack and cloud technologies.
+                </p>
+                <div class="mt-8 flex flex-col sm:flex-row justify-center md:justify-start gap-4">
+                    <a href="#projects" class="bg-sky-500 hover:bg-sky-600 text-white font-bold py-3 px-6 rounded-lg transition-transform transform hover:scale-105">View My Work</a>
+                    <a href="#contact" class="bg-gray-700 hover:bg-gray-600 text-white font-bold py-3 px-6 rounded-lg transition-transform transform hover:scale-105">Get In Touch</a>
+                </div>
+            </div>
+            <div class="md:w-1/2 mt-10 md:mt-0 flex justify-center">
+                <div class="w-64 h-64 sm:w-72 sm:h-72 md:w-96 md:h-96 rounded-full bg-gradient-to-br from-sky-500 to-indigo-600 flex items-center justify-center shadow-2xl shadow-sky-500/20">
+                    <i data-lucide="code-xml" class="w-32 h-32 md:w-48 md:h-48 text-white opacity-80"></i>
+                </div>
+            </div>
+        </section>
+
+        <section id="about" class="py-20">
+            <h2 class="text-3xl font-bold text-center text-white mb-12">About Me</h2>
+            <div class="flex flex-col md:flex-row items-center gap-12">
+                <div class="md:w-1/3 flex justify-center">
+                     <img src="hari.jpeg" alt="Harish's Photo" class="w-64 h-64 rounded-full border-4 border-sky-400 object-cover shadow-lg">
+                </div>
+                <div class="md:w-2/3 text-lg text-gray-400 leading-relaxed">
+                    <p>
+                        Hello! I'm Harish, a computer science student with a strong passion for software development and problem-solving. My journey into the world of code started with a fascination for how technology can shape our world, and it has since grown into a full-fledged dedication to building high-quality, impactful applications.
+                    </p>
+                    <br>
+                    <p>
+                        I thrive on challenges and am constantly learning new technologies. My core expertise lies in front-end development with React and back-end with Node.js, but I'm always eager to expand my skillset. I believe in writing clean, efficient, and well-documented code. When I'm not coding, you can find me solving problems on LeetCode or exploring the latest tech trends.
+                    </p>
+                </div>
+            </div>
+        </section>
+        
+        <section id="why-hire-me" class="py-20 bg-gray-900/50 rounded-xl">
+            <h2 class="text-3xl font-bold text-center text-white mb-12">Why Hire Me?</h2>
+            <div class="grid md:grid-cols-3 gap-8 text-center max-w-5xl mx-auto px-4">
+                <div class="glass-effect p-6 rounded-xl">
+                    <div class="flex justify-center mb-4"><i data-lucide="brain-circuit" class="w-12 h-12 text-sky-400"></i></div>
+                    <h3 class="text-xl font-bold text-white mb-2">Problem Solver</h3>
+                    <p class="text-gray-400">I possess a strong foundation in Data Structures and Algorithms, allowing me to analyze problems and implement efficient, scalable solutions.</p>
+                </div>
+                <div class="glass-effect p-6 rounded-xl">
+                    <div class="flex justify-center mb-4"><i data-lucide="code" class="w-12 h-12 text-sky-400"></i></div>
+                    <h3 class="text-xl font-bold text-white mb-2">Practical Skills</h3>
+                    <p class="text-gray-400">I focus on building real-world applications. My projects demonstrate my ability to take an idea from concept to a deployed, functional product.</p>
+                </div>
+                <div class="glass-effect p-6 rounded-xl">
+                    <div class="flex justify-center mb-4"><i data-lucide="trending-up" class="w-12 h-12 text-sky-400"></i></div>
+                    <h3 class="text-xl font-bold text-white mb-2">Continuous Learner</h3>
+                    <p class="text-gray-400">The tech world is always evolving, and so am I. I am passionate about learning new technologies and constantly improving my skillset.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="experience" class="py-20">
+            <h2 class="text-3xl font-bold text-center text-white mb-12">My Journey</h2>
+            <div class="grid md:grid-cols-2 gap-16 max-w-5xl mx-auto">
+                <div>
+                    <h3 class="text-2xl font-bold text-sky-400 mb-6 flex items-center gap-2"><i data-lucide="graduation-cap"></i> Education</h3>
+                    <div class="relative border-l-2 border-gray-700 pl-8">
+                        <div class="mb-8 relative">
+                            <div class="absolute -left-[1.6rem] top-1 w-6 h-6 bg-sky-500 rounded-full border-4 border-gray-800"></div>
+                            <p class="font-semibold text-gray-400">2023 - 2027</p>
+                            <h4 class="text-xl font-bold text-white mt-1">Bachelor of Technology, CSE</h4>
+                            <p class="text-gray-500">PBR Visvodaya Institute of Science and Technology</p>
+                            <p class="text-gray-400 mt-2 text-sm">Relevant Coursework: Data Structures & Algorithms, Object-Oriented Programming, Database Management Systems, Operating Systems.</p>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="text-2xl font-bold text-sky-400 mb-6 flex items-center gap-2"><i data-lucide="briefcase"></i> Experience</h3>
+                    <div class="relative border-l-2 border-gray-700 pl-8">
+                        <div class="mb-8 relative">
+                            <div class="absolute -left-[1.6rem] top-1 w-6 h-6 bg-sky-500 rounded-full border-4 border-gray-800"></div>
+                            <p class="font-semibold text-gray-400">Summer 2025</p>
+                            <h4 class="text-xl font-bold text-white mt-1">Web Development Intern</h4>
+                            <p class="text-gray-500">Tech Solutions Inc.</p>
+                             <ul class="list-disc list-inside text-gray-400 mt-2 text-sm space-y-1">
+                                <li>Developed and maintained features for a client-facing web application using React.</li>
+                                <li>Collaborated with the backend team to integrate REST APIs.</li>
+                                <li>Participated in daily stand-ups and agile development cycles.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="skills" class="py-20">
+            <h2 class="text-3xl font-bold text-center text-white mb-12">My Tech Stack</h2>
+            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-8 text-center">
+                <div class="flex flex-col items-center p-4 glass-effect rounded-xl hover:bg-sky-400/10 transition-all transform hover:-translate-y-2"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-original.svg" class="h-16 w-16" /><p class="mt-4 font-semibold">HTML5</p></div>
+                <div class="flex flex-col items-center p-4 glass-effect rounded-xl hover:bg-sky-400/10 transition-all transform hover:-translate-y-2"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-original.svg" class="h-16 w-16" /><p class="mt-4 font-semibold">CSS3</p></div>
+                <div class="flex flex-col items-center p-4 glass-effect rounded-xl hover:bg-sky-400/10 transition-all transform hover:-translate-y-2"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg" class="h-16 w-16" /><p class="mt-4 font-semibold">JavaScript</p></div>
+                <div class="flex flex-col items-center p-4 glass-effect rounded-xl hover:bg-sky-400/10 transition-all transform hover:-translate-y-2"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg" class="h-16 w-16" /><p class="mt-4 font-semibold">React</p></div>
+                <div class="flex flex-col items-center p-4 glass-effect rounded-xl hover:bg-sky-400/10 transition-all transform hover:-translate-y-2"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg" class="h-16 w-16" /><p class="mt-4 font-semibold">Node.js</p></div>
+                <div class="flex flex-col items-center p-4 glass-effect rounded-xl hover:bg-sky-400/10 transition-all transform hover:-translate-y-2"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/express/express-original.svg" class="h-16 w-16" style="filter: invert(1)"/><p class="mt-4 font-semibold">Express</p></div>
+                <div class="flex flex-col items-center p-4 glass-effect rounded-xl hover:bg-sky-400/10 transition-all transform hover:-translate-y-2"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mongodb/mongodb-original.svg" class="h-16 w-16" /><p class="mt-4 font-semibold">MongoDB</p></div>
+                <div class="flex flex-col items-center p-4 glass-effect rounded-xl hover:bg-sky-400/10 transition-all transform hover:-translate-y-2"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/tailwindcss/tailwindcss-plain.svg" class="h-16 w-16" /><p class="mt-4 font-semibold">Tailwind CSS</p></div>
+                <div class="flex flex-col items-center p-4 glass-effect rounded-xl hover:bg-sky-400/10 transition-all transform hover:-translate-y-2"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/git/git-original.svg" class="h-16 w-16" /><p class="mt-4 font-semibold">Git</p></div>
+                <div class="flex flex-col items-center p-4 glass-effect rounded-xl hover:bg-sky-400/10 transition-all transform hover:-translate-y-2"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg" class="h-16 w-16" style="filter: invert(1)"/><p class="mt-4 font-semibold">GitHub</p></div>
+                <div class="flex flex-col items-center p-4 glass-effect rounded-xl hover:bg-sky-400/10 transition-all transform hover:-translate-y-2"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/cplusplus/cplusplus-original.svg" class="h-16 w-16" /><p class="mt-4 font-semibold">C++</p></div>
+                <div class="flex flex-col items-center p-4 glass-effect rounded-xl hover:bg-sky-400/10 transition-all transform hover:-translate-y-2"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" class="h-16 w-16" /><p class="mt-4 font-semibold">Python</p></div>
+            </div>
+        </section>
+
+        <section id="projects" class="py-20">
+            <h2 class="text-3xl font-bold text-center text-white mb-12">Featured Projects</h2>
+            <div id="projects-container" class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="text-center col-span-full"><p>Loading projects...</p></div>
+            </div>
+        </section>
+
+        <section id="stats" class="py-20">
+            <h2 class="text-3xl font-bold text-center text-white mb-12">Coding Stats</h2>
+            <div class="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+                <div id="github-stats-card" class="glass-effect p-6 rounded-xl"><h3 class="text-2xl font-bold mb-4 flex items-center gap-2"><i data-lucide="github"></i> GitHub Stats</h3><div id="github-stats-content" class="space-y-3"><p>Loading stats...</p></div></div>
+                <div id="leetcode-stats-card" class="glass-effect p-6 rounded-xl"><h3 class="text-2xl font-bold mb-4 flex items-center gap-2"><i data-lucide="code"></i> LeetCode Stats</h3><div id="leetcode-stats-content" class="space-y-3"><p>Loading stats...</p></div></div>
+            </div>
+        </section>
+        
+      <section id="articles" class="py-20">
+            <h2 class="text-3xl font-bold text-center text-white mb-12">Latest Articles</h2>
+            <div class="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+                
+                <a class="block glass-effect rounded-xl p-6 hover:-translate-y-2 transition-transform duration-300 cursor-default">
+                    <p class="text-sm text-sky-400">October 2, 2025</p>
+                    <h3 class="text-xl font-bold text-white mt-2">Understanding Asynchronous JavaScript</h3>
+                    <p class="text-gray-400 mt-2">A deep dive into Promises, async/await, and the event loop. Explained in simple terms.</p>
+                    <div class="mt-4 text-sky-400 font-semibold flex items-center gap-1">Read More <i data-lucide="arrow-right" class="w-4 h-4"></i></div>
+                </a>
+
+                <a class="block glass-effect rounded-xl p-6 hover:-translate-y-2 transition-transform duration-300 cursor-default">
+                    <p class="text-sm text-sky-400">September 15, 2025</p>
+                    <h3 class="text-xl font-bold text-white mt-2">Getting Started with React Hooks</h3>
+                    <p class="text-gray-400 mt-2">An introduction to useState, useEffect, and other essential hooks for modern React development.</p>
+                    <div class="mt-4 text-sky-400 font-semibold flex items-center gap-1">Read More <i data-lucide="arrow-right" class="w-4 h-4"></i></div>
+                </a>
+
+            </div>
+        </section>
+
+        <section id="contact" class="py-20 text-center">
+            <h2 class="text-3xl font-bold text-white">Get In Touch</h2>
+            <p class="mt-4 text-lg text-gray-400 max-w-2xl mx-auto">
+                I'm currently open to new opportunities and collaborations. Feel free to reach out if you have a project in mind or just want to connect!
+            </p>
+            <a href="https://mail.google.com/mail/?view=cm&fs=1&to=chandufftopup@gmail.com" target="_blank" class="mt-8 inline-block bg-sky-500 hover:bg-sky-600 text-white font-bold py-3 px-8 rounded-lg text-lg transition-transform transform hover:scale-105">
+                Say Hello
+            </a>
+            <div class="mt-12 flex justify-center space-x-6">
+                 <a href="https://github.com/hari04-157" target="_blank" class="text-gray-400 hover:text-sky-400"><i data-lucide="github" class="w-8 h-8"></i></a>
+                 <a href="https://www.linkedin.com/in/YOUR_LINKEDIN_USERNAME" target="_blank" class="text-gray-400 hover:text-sky-400"><i data-lucide="linkedin" class="w-8 h-8"></i></a>
+                 <a href="https://leetcode.com/hari04/" target="_blank" class="text-gray-400 hover:text-sky-400"><i data-lucide="code-2" class="w-8 h-8"></i></a>
+            </div>
+        </section>
+    </main>
+
+    <footer class="border-t border-gray-800">
+        <div class="container mx-auto px-6 py-6 text-center text-gray-500">
+            <p>&copy; 2025 Harish. Built with <span class="text-sky-400">&hearts;</span> and code.</p>
+        </div>
+    </footer>
+
+    <div id="chatbot-container">
+        <div id="chatbot-tooltip" class="absolute bottom-[75px] right-0 w-max max-w-[220px]">
+            <span class="tooltip-text-item">hey iam jarvis</span>
+            <span class="tooltip-text-item">how can help you with harish portfolio</span>
+            <span class="tooltip-text-item">feel free to ask about him</span>
+        </div>
+        <div id="chatbot-window" class="glass-effect rounded-2xl shadow-2xl flex flex-col overflow-hidden">
+            <div class="bg-gray-900/50 p-4 flex items-center justify-between border-b border-white/10"><h3 class="font-bold text-white">Chat with my AI Assistant</h3><button id="close-chatbot" class="text-gray-400 hover:text-white"><i data-lucide="x"></i></button></div>
+            <div id="chat-messages" class="flex-1 p-4 space-y-4 overflow-y-auto">
+                 <div class="flex"><div class="bg-gray-700 p-3 rounded-lg max-w-xs"><p class="text-sm">Hello! I'm Harish's AI assistant. Ask me anything about him!</p></div></div>
+            </div>
+            <div id="suggested-questions" class="p-2 border-t border-white/10 text-center">
+                <p class="text-xs text-gray-400 mb-2">Try asking:</p>
+                <div class="flex flex-wrap justify-center gap-2">
+                    <button class="suggested-question text-xs bg-gray-700/50 hover:bg-gray-600/50 px-2 py-1 rounded-lg">What are his skills?</button>
+                    <button class="suggested-question text-xs bg-gray-700/50 hover:bg-gray-600/50 px-2 py-1 rounded-lg">Tell me a joke about him.</button>
+                    <button class="suggested-question text-xs bg-gray-700/50 hover:bg-gray-600/50 px-2 py-1 rounded-lg">What are his coding stats?</button>
+                    <button class="suggested-question text-xs bg-gray-700/50 hover:bg-gray-600/50 px-2 py-1 rounded-lg">How can I contact him?</button>
+                </div>
+            </div>
+            <div class="p-4 border-t border-white/10">
+                <div class="flex items-center space-x-2">
+                    <input type="text" id="chat-input" placeholder="Type your message..." class="w-full bg-gray-900/50 rounded-lg px-4 py-2 border-transparent focus:ring-2 focus:ring-sky-500 focus:outline-none">
+                    <button id="chat-send" class="bg-sky-500 hover:bg-sky-600 text-white p-2 rounded-lg"><i data-lucide="send-horizontal"></i></button>
+                </div>
+            </div>
+        </div>
+        <button id="chatbot-toggle"><i id="chatbot-icon" data-lucide="message-circle"></i></button>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12"></script>
+    <script src="https://unpkg.com/scrollreveal"></script>
+
+    <script>
+        // Initialize Lucide Icons
+        lucide.createIcons();
+
+        // --- GLOBAL STATS VARIABLES ---
+        let githubStatsData = null;
+        let leetcodeStatsData = null;
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Header Scroll
+            const header = document.getElementById('header');
+            window.addEventListener('scroll', () => { window.scrollY > 50 ? header.classList.add('bg-gray-900', 'shadow-lg') : header.classList.remove('bg-gray-900', 'shadow-lg'); });
+
+            // Mobile Menu
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            const mobileMenuLinks = document.querySelectorAll('.mobile-menu-link');
+            mobileMenuButton.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
+            mobileMenuLinks.forEach(link => { link.addEventListener('click', () => mobileMenu.classList.add('hidden')); });
+            
+            // Typed.js
+            new Typed('#typed-text', { strings: ['web.', 'future.', 'cloud.'], typeSpeed: 100, backSpeed: 50, loop: true, smartBackspace: true });
+
+            // Scroll Reveal
+            const sr = ScrollReveal({ distance: '50px', duration: 1500, easing: 'cubic-bezier(0.5, 0, 0, 1)', reset: true });
+            sr.reveal('#home > div:first-child', { origin: 'left' });
+            sr.reveal('#home > div:last-child', { origin: 'right' });
+            sr.reveal('#about h2, #why-hire-me h2, #experience h2, #skills h2, #projects h2, #stats h2, #articles h2, #contact h2', { origin: 'top' });
+            sr.reveal('#about > div', { origin: 'bottom' });
+            sr.reveal('#why-hire-me .grid > div', { origin: 'bottom', interval: 100 });
+            sr.reveal('#experience .relative > div', { origin: 'left', interval: 100 });
+            sr.reveal('#skills .grid > div', { origin: 'bottom', interval: 100 });
+            sr.reveal('#projects-container > div', { origin: 'bottom', interval: 100 });
+            sr.reveal('#stats > div > div', { origin: 'bottom', interval: 100 });
+            sr.reveal('#articles > div > a', { origin: 'bottom', interval: 100 });
+
+            // CONFIG
+            const GITHUB_USERNAME = 'hari04-157';
+            const LEETCODE_USERNAME = 'hari04123'; 
+            
+            // --- UPDATED PROJECT FETCHING ---
+            async function fetchGithubProjects() {
+                const projectsContainer = document.getElementById('projects-container');
+                
+                // 1. NEET Prep App
+                const project1 = `
+                    <div class="glass-effect rounded-xl p-6 flex flex-col hover:-translate-y-2 transition-transform duration-300 border border-sky-500/30 relative overflow-hidden">
+                        <div class="absolute top-0 right-0 bg-sky-500 text-white text-xs font-bold px-2 py-1 rounded-bl-lg">Featured</div>
+                        <h3 class="text-xl font-bold text-white">NEET Prep App</h3>
+                        <p class="text-gray-400 mt-2 flex-grow">A specialized platform for NEET aspirants to practice mock tests and track progress.</p>
+                        <div class="mt-4"><span class="inline-block bg-sky-900 text-sky-300 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded">MERN Stack</span></div>
+                        <div class="mt-6 flex justify-end space-x-4">
+                            <a href="https://neet-prep-app.onrender.com" target="_blank" class="text-sky-400 hover:text-sky-300 flex items-center gap-1 font-semibold"><i data-lucide="external-link" class="w-4 h-4"></i> Visit Live Site</a>
+                        </div>
+                    </div>`;
+
+                // 2. Netlify App
+                const project2 = `
+                    <div class="glass-effect rounded-xl p-6 flex flex-col hover:-translate-y-2 transition-transform duration-300 border border-purple-500/30 relative overflow-hidden">
+                        <div class="absolute top-0 right-0 bg-purple-500 text-white text-xs font-bold px-2 py-1 rounded-bl-lg">New</div>
+                        <h3 class="text-xl font-bold text-white">Project Title Here</h3>
+                        <p class="text-gray-400 mt-2 flex-grow">Deployed on Netlify. A short description of this project.</p>
+                        <div class="mt-4"><span class="inline-block bg-purple-900 text-purple-300 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded">Web App</span></div>
+                        <div class="mt-6 flex justify-end space-x-4">
+                            <a href="https://curious-pithivier-371853.netlify.app/" target="_blank" class="text-purple-400 hover:text-purple-300 flex items-center gap-1 font-semibold"><i data-lucide="external-link" class="w-4 h-4"></i> Visit Live Site</a>
+                        </div>
+                    </div>`;
+
+                try {
+                    const response = await fetch(`https://api.github.com/users/${GITHUB_USERNAME}/repos?sort=updated&direction=desc`);
+                    if (!response.ok) throw new Error('Network response was not ok');
+                    const repos = await response.json();
+                    
+                    let allProjectsHTML = project1 + project2;
+                    repos.slice(0, 4).forEach(repo => {
+                         allProjectsHTML += `
+                            <div class="glass-effect rounded-xl p-6 flex flex-col hover:-translate-y-2 transition-transform duration-300">
+                                <h3 class="text-xl font-bold text-white">${repo.name}</h3>
+                                <p class="text-gray-400 mt-2 flex-grow">${repo.description || 'No description provided.'}</p>
+                                <div class="mt-4"><span class="inline-block bg-sky-900 text-sky-300 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded">${repo.language || 'Code'}</span></div>
+                                <div class="mt-6 flex justify-end space-x-4">
+                                    <a href="${repo.html_url}" target="_blank" class="text-gray-400 hover:text-sky-400 flex items-center gap-1"><i data-lucide="github" class="w-4 h-4"></i> Source</a>
+                                    ${repo.homepage ? `<a href="${repo.homepage}" target="_blank" class="text-gray-400 hover:text-sky-400 flex items-center gap-1"><i data-lucide="external-link" class="w-4 h-4"></i> Live Demo</a>` : ''}
+                                </div>
+                            </div>`;
+                    });
+                    projectsContainer.innerHTML = allProjectsHTML;
+                    lucide.createIcons();
+                } catch (error) {
+                    projectsContainer.innerHTML = project1 + project2 + `<p class="text-red-400 col-span-full text-center mt-4">Failed to load GitHub projects.</p>`;
+                }
+            }
+
+            // --- FETCH STATS ---
+            async function fetchGithubStats() {
+                const statsContainer = document.getElementById('github-stats-content');
+                try {
+                    const response = await fetch(`https://api.github.com/users/${GITHUB_USERNAME}`);
+                    if (!response.ok) throw new Error('Network response was not ok');
+                    const stats = await response.json();
+                    githubStatsData = stats;
+                    statsContainer.innerHTML = `
+                        <div class="flex justify-between items-center"><span class="font-semibold">Public Repos:</span> <span class="text-sky-400 font-bold text-lg">${stats.public_repos}</span></div>
+                        <div class="flex justify-between items-center"><span class="font-semibold">Followers:</span> <span class="text-sky-400 font-bold text-lg">${stats.followers}</span></div>
+                        <div class="flex justify-between items-center"><span class="font-semibold">Following:</span> <span class="text-sky-400 font-bold text-lg">${stats.following}</span></div>
+                        <p class="text-sm text-gray-500 pt-2">Last updated: ${new Date(stats.updated_at).toLocaleDateString()}</p>`;
+                } catch (error) { statsContainer.innerHTML = `<p class="text-red-400">Failed to load GitHub stats.</p>`; }
+            }
+
+            async function fetchLeetCodeStats() {
+                const statsContainer = document.getElementById('leetcode-stats-content');
+                const apiUrl = `https://leetcode-stats-api.herokuapp.com/${LEETCODE_USERNAME}`;
+                try {
+                    const response = await fetch(apiUrl);
+                    if (!response.ok) throw new Error(`Network response was not ok`);
+                    const stats = await response.json();
+                    if (stats.status === "error") throw new Error(stats.message);
+                    leetcodeStatsData = stats;
+                    statsContainer.innerHTML = `
+                        <div class="flex justify-between items-center"><span class="font-semibold">Total Solved:</span> <span class="text-sky-400 font-bold text-lg">${stats.totalSolved} / ${stats.totalQuestions}</span></div>
+                        <div class="flex justify-between items-center"><span class="font-semibold text-green-400">Easy:</span> <span class="font-bold text-lg">${stats.easySolved}</span></div>
+                        <div class="flex justify-between items-center"><span class="font-semibold text-yellow-400">Medium:</span> <span class="font-bold text-lg">${stats.mediumSolved}</span></div>
+                        <div class="flex justify-between items-center"><span class="font-semibold text-red-400">Hard:</span> <span class="font-bold text-lg">${stats.hardSolved}</span></div>
+                        <div class="flex justify-between items-center"><span class="font-semibold">Acceptance Rate:</span> <span class="text-sky-400 font-bold text-lg">${stats.acceptanceRate}%</span></div>`;
+                } catch (error) { statsContainer.innerHTML = `<p class="text-red-400">Failed to load LeetCode stats.</p>`; }
+            }
+            
+            // --- SECURE CHATBOT ---
+            const chatbotWindow = document.getElementById('chatbot-window');
+            const chatbotToggle = document.getElementById('chatbot-toggle');
+            const closeChatbot = document.getElementById('close-chatbot');
+            const chatMessages = document.getElementById('chat-messages');
+            const chatInput = document.getElementById('chat-input');
+            const chatSend = document.getElementById('chat-send');
+            const suggestedQuestions = document.querySelectorAll('.suggested-question');
+            const chatbotTooltip = document.getElementById('chatbot-tooltip');
+
+            chatbotToggle.addEventListener('click', () => { chatbotWindow.classList.toggle('open'); if (chatbotTooltip) chatbotTooltip.style.display = 'none'; });
+            closeChatbot.addEventListener('click', () => { chatbotWindow.classList.remove('open'); if (chatbotTooltip) chatbotTooltip.style.display = 'none'; });
+            suggestedQuestions.forEach(button => { button.addEventListener('click', () => { chatInput.value = button.textContent; handleSendMessage(); }); });
+
+            const handleSendMessage = async () => {
+                const message = chatInput.value.trim();
+                if (!message) return;
+                appendMessage(message, 'user');
+                chatInput.value = '';
+                showTypingIndicator();
+
+                try {
+                    if (!githubStatsData) await fetchGithubStats();
+                    if (!leetcodeStatsData) await fetchLeetCodeStats();
+                    const botResponse = await callGeminiAPI(message, githubStatsData, leetcodeStatsData);
+                    appendMessage(botResponse, 'bot');
+                } catch (error) {
+                    appendMessage("I'm having trouble connecting right now. Please try again later.", 'bot');
+                    console.error("Chat Error:", error);
+                } finally { hideTypingIndicator(); }
+            };
+
+            // --- CALLING NETLIFY FUNCTION ---
+            async function callGeminiAPI(userInput, githubData, leetcodeData) {
+                // Point to local Netlify function
+                const apiUrl = `/.netlify/functions/chat`; 
+                
+                let dynamicStatsContext = "";
+                if (githubData) dynamicStatsContext += `\n- **GITHUB:** ${githubData.public_repos} repos, ${githubData.followers} followers.`;
+                if (leetcodeData) dynamicStatsContext += `\n- **LEETCODE:** ${leetcodeData.totalSolved} solved. Acceptance: ${leetcodeData.acceptanceRate}%.`;
+
+                const systemPrompt = `You are a professional assistant for Harish (Portfolio).
+                - **Context:** Student at PBR Visvodaya (2023-2027). Skills: MERN, C++, Python.
+                - **Stats:** Use these numbers: ${dynamicStatsContext}
+                - **Rules:** Be concise. If asked for a joke, make it tech-related. Contact: chandufftopup@gmail.com.`;
+
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        systemInstruction: { parts: [{ text: systemPrompt }] },
+                        contents: [{ parts: [{ text: userInput }] }]
+                    })
+                });
+
+                if (!response.ok) throw new Error(`Status ${response.status}`);
+                const result = await response.json();
+                if (result.error) throw new Error(result.error);
+                return result.candidates[0].content.parts[0].text;
+            }
+            
+            function appendMessage(text, sender) {
+                const messageClass = sender === 'user' ? 'justify-end' : 'justify-start';
+                const bubbleClass = sender === 'user' ? 'bg-sky-500 text-white' : 'bg-gray-700';
+                let htmlText = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>');
+                chatMessages.innerHTML += `<div class="flex ${messageClass}"><div class="${bubbleClass} p-3 rounded-lg max-w-xs"><p class="text-sm">${htmlText}</p></div></div>`;
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+            function showTypingIndicator() { chatMessages.innerHTML += `<div id="typing-indicator" class="flex"><div class="bg-gray-700 p-3 rounded-lg"><div class="typing-indicator"><span></span><span></span><span></span></div></div></div>`; chatMessages.scrollTop = chatMessages.scrollHeight; }
+            function hideTypingIndicator() { const indicator = document.getElementById('typing-indicator'); if (indicator) indicator.remove(); }
+
+            chatSend.addEventListener('click', handleSendMessage);
+            chatInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') handleSendMessage(); });
+
+            fetchGithubProjects();
+            fetchGithubStats();
+            fetchLeetCodeStats();
+        });
+    </script>
+</body>
+</html>
