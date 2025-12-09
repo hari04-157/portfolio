@@ -314,7 +314,7 @@
             <p class="mt-4 text-lg text-gray-400 max-w-2xl mx-auto">
                 I'm currently open to new opportunities and collaborations. Feel free to reach out if you have a project in mind or just want to connect!
             </p>
-            <a href="https://mail.google.com/mail/?view=cm&fs=1&to=chandufftopup@gmail.com" target="_blank" class="mt-8 inline-block bg-sky-500 hover:bg-sky-600 text-white font-bold py-3 px-8 rounded-lg text-lg transition-transform transform hover:scale-105">
+            <a href="mailto:chandufftopup@gmail.com?subject=Hello%20Harish&body=I%20saw%20your%20portfolio%20and%20wanted%20to%20connect!" class="mt-8 inline-block bg-sky-500 hover:bg-sky-600 text-white font-bold py-3 px-8 rounded-lg text-lg transition-transform transform hover:scale-105">
                 Say Hello
             </a>
             <div class="mt-12 flex justify-center space-x-6">
@@ -534,18 +534,26 @@
                 if (githubData) dynamicStatsContext += `\n- **GITHUB:** ${githubData.public_repos} repos, ${githubData.followers} followers.`;
                 if (leetcodeData) dynamicStatsContext += `\n- **LEETCODE:** ${leetcodeData.totalSolved} solved. Acceptance: ${leetcodeData.acceptanceRate}%.`;
 
-                // --- SYSTEM PROMPT (FIXED) ---
+                // --- UPDATED SYSTEM PROMPT WITH USER DETAILS & PORTFOLIO CONTENT ---
                 const systemPrompt = `
                 ROLE: You are an AI Portfolio Assistant for Harish. You are talking to a VISITOR.
                 STRICT RULES:
                 1. IDENTITY: You are NOT Harish. Never say "I am a student". Say "Harish is a student".
-                2. GREETING: If the user says "Hi" or "Hello", reply ONLY: "Hello! I am Harish's AI assistant. I can tell you about his projects, skills, or stats. What would you like to know?"
-                3. CONCISENESS: Keep answers short (max 2-3 sentences unless asked for more).
-                4. CONTEXT:
-                   - Name: Harish (B.Tech CSE, 2023-2027, PBR Visvodaya).
-                   - Location: Singareddipalli, Nellore, AP.
-                   - Stats: ${dynamicStatsContext}
-                   - Contact: chandufftopup@gmail.com
+                2. TONE: Professional, enthusiastic, and concise.
+                3. CONTEXT (Use this to answer questions):
+                   - FULL NAME: Panem Venkata Hareesh (goes by Harish).
+                   - EDUCATION: B.Tech CSE (3rd Year) at PBR Visvodaya Institute of Science and Technology (2023-2027).
+                   - LOCATION: Singareddipalli, Nellore (Dist), Andhra Pradesh.
+                   - SKILLS: MERN Stack (MongoDB, Express, React, Node.js), Python, C++, Java, Tailwind CSS.
+                   - EXPERIENCE: Web Development Intern at Tech Solutions Inc (Summer 2025).
+                   - PROJECTS:
+                     1. NEET Prep App: Mock tests for medical aspirants (MERN Stack).
+                     2. Netlify WPM Project: Typing speed calculator.
+                     3. Portfolio: The site the user is currently on (HTML, Tailwind, Gemini AI).
+                   - INTERESTS: AI/ML (Chatbots, Ollama), Web Development, Quantum Computing, Defence Services (CDS aspirant).
+                   - STATS: ${dynamicStatsContext}
+                   - CONTACT: chandufftopup@gmail.com
+                4. GREETING: If user says "Hi", reply: "Hello! I'm Harish's AI assistant. I can tell you about his MERN stack projects, his internship, or his coding stats. What would you like to know?"
                 `;
 
                 const response = await fetch(apiUrl, {
